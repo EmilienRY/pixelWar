@@ -1,4 +1,3 @@
-from typing import List
 import pygame
 
 WHITE = (255, 255, 255)
@@ -7,6 +6,7 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 
 class Grille:
+
     def __init__(self, n:int, m:int, screen_width:int, screen_height:int,screen):
         self.n = n  # Nombre de lignes
         self.m = m  # Nombre de colonnes
@@ -18,6 +18,7 @@ class Grille:
 
     def draw(self):
         """Dessiner la grille sur l'écran"""
+        self.screen.fill(WHITE)
         for x in range(self.m):
             for y in range(self.n):
                 rect = pygame.Rect(x * self.cell_width, y * self.cell_height, self.cell_width, self.cell_height)
