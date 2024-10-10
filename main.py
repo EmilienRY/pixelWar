@@ -4,21 +4,18 @@ from grille.grille import Grille
 
 pygame.init()
 
-screen_width, screen_height = 1000, 800
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("PixelWar")
-
-# Couleurs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
 
-# Taille des cellules de la grille
-cell_size = 50
+screen_width, screen_height = 800, 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Fenêtre avec Grille et Objets")
 
-g:Grille
-
-g.__init__(10,10)
-
+cell_size = 10
+grille = Grille(10, 10, screen_width, screen_height,screen)
+grille.place_agent(1, 1,1)
+grille.place_agent(3, 5,2)
 
 running = True
 while running:
@@ -28,12 +25,10 @@ while running:
 
     screen.fill(WHITE)
 
-    for x in range(0, screen_width, cell_size):
-        for y in range(0, screen_height, cell_size):
-            rect = pygame.Rect(x, y, cell_size, cell_size)
-            pygame.draw.rect(screen, BLACK, rect, 1)
+    grille.draw()
 
     pygame.display.flip()
 
+# Quitter Pygame proprement
 pygame.quit()
 sys.exit()
