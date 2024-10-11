@@ -31,6 +31,7 @@ class Grille:
     def place_agent(self, x:int, y:int, team:int):
         """Placer un objet à la position (x, y) dans la grille"""
         if 0 <= x < self.m and 0 <= y < self.n:
+            if self.grid[y][x]>=0:
                 self.grid[y][x] = team
 
     def remove_agent(self, x:int, y:int):
