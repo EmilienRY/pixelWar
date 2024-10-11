@@ -15,7 +15,6 @@ class Grille:
         self.cell_height = screen_height // n
         self.grid = [[0 for _ in range(m)] for _ in range(n)]  # Matrice n*m remplie de 0
 
-
     def draw(self):
         """Dessiner la grille sur l'écran"""
         self.screen.fill(Color.WHITE.value)
@@ -70,8 +69,6 @@ class Grille:
                         self._place_adjacent_obstacle(x if chosen_obstacle else new_x, y if chosen_obstacle else new_y)
                         obstacles_placed += 1
 
-
-
     def _place_adjacent_obstacle(self, x, y):
         """Attempt to place one obstacle randomly adjacent to the given position (x, y)"""
         # Possible directions to move: (dx, dy) pairs for 8 directions (up, down, left, right, diagonals)
@@ -88,13 +85,13 @@ class Grille:
             self.grid[new_x][new_y] = -1  # Place the obstacle at the valid adjacent position
         return new_x,new_y
 
-
-
     def place_agent(self, x:int, y:int, team:int):
         """Placer un objet à la position (x, y) dans la grille"""
-        if 0 <= x < self.m and 0 <= y < self.n:
-            if self.grid[y][x]>=0:
-                self.grid[y][x] = team
+        if 0 <= x < self.m and 0 <= y < self.n and self.grid[y][x] ==0:
+            self.grid[y][x] = team
+            return True
+        else :
+            return False
 
 
     def remove_agent(self, x:int, y:int):

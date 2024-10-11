@@ -1,22 +1,53 @@
 from agent.Agent import Agent
+from equipe.Equipe import Equipe
 from grille.grille import Grille
 import time
 
+listeColor=[(0, 0, 255),(255, 0, 0),(255, 255, 0),(0, 255, 0)]
+
 class GameMaster:
-    def __init__(self,listeAgents):
+
+    def __init__(self, nbTeam, nbAgentsParTeam, n, m,g:Grille):
+        tabEquipes = []
+        for i in range(nbTeam):
+            if i == 0:
+                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],0,0, n//3)
+                tabEquipes.append(equipe)
+            elif i==1:
+                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],0,(n//3)*2,n-1)
+                tabEquipes.append(equipe)
+            elif i==2:
+                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],(m//3)*2,0,n//3)
+                tabEquipes.append(equipe)
+            elif i==3:
+                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],(m//3)*2,(n//3)*2,n-1)
+                tabEquipes.append(equipe)
+
         self.nbTours=0
-        self.tabJoueur=listeAgents
+        self.tabEquipes=tabEquipes
 
-    def AQuiDeJouer(self)->Agent:
-        return self.tabJoueur[0]
+        for i in range(nbTeam):
+            for j in range(nbAgentsParTeam):
+                g.place_agent(self.tabEquipes[i].listeEquipier[j].x, self.tabEquipes[i].listeEquipier[j].y, self.tabEquipes[i].numEquipe)
 
-    def tour(self,agent:Agent,g:Grille):
-        self.nbTours+=1
-        agent.jouer(g)
-        self.tabJoueur.pop(0)
-        self.tabJoueur.append(agent)
+        self.grille=g
+
         g.draw()
-        time.sleep(0.5)
+        self.grille.place_obstacle(0, 0)
+        self.grille.place_random_obstacles(20)
+
+
+    def AQuiDeJouer(self) -> Equipe:
+        return self.tabEquipes[0]
+
+    def tour(self,g:Grille):
+        self.nbTours += 1
+        equipe=self.tabEquipes.pop(0)
+        player=equipe.listeEquipier.pop(0)
+        player.jouer(g)
+        equipe.listeEquipier.append(player)
+        self.tabEquipes.append(equipe)
+        g.draw()
 
 
 
