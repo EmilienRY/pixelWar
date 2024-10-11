@@ -5,6 +5,8 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
 
 class Grille:
 
@@ -28,9 +30,9 @@ class Grille:
                 if self.grid[y][x] == -1:
                     pygame.draw.rect(self.screen, BLACK, rect)
                 if self.grid[y][x] == 1:
-                    pygame.draw.rect(self.screen, BLUE, rect)
+                    pygame.draw.rect(self.screen, YELLOW, rect)
                 if self.grid[y][x] == 2:
-                    pygame.draw.rect(self.screen, RED, rect)
+                    pygame.draw.rect(self.screen, GREEN, rect)
 
     def place_obstacle(self, x:int, y:int):
         """Placer un objet à la position (x, y) dans la grille"""
