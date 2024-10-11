@@ -3,9 +3,9 @@ from grille.grille import Grille
 import time
 
 class GameMaster:
-    def __init__(self,p1:Agent,p2:Agent):
+    def __init__(self,listeAgents):
         self.nbTours=0
-        self.tabJoueur=[p1,p2]
+        self.tabJoueur=listeAgents
 
     def AQuiDeJouer(self)->Agent:
         return self.tabJoueur[0]
@@ -15,6 +15,7 @@ class GameMaster:
         agent.jouer(g)
         self.tabJoueur.pop(0)
         self.tabJoueur.append(agent)
+        g.draw()
         time.sleep(0.5)
 
 
