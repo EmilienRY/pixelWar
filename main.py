@@ -1,7 +1,7 @@
 import pygame
 import sys
 from grille.grille import Grille
-from agent.AgentTest import AgentTest
+from agent.Agent import Agent
 from gameMaster.gameMaster import GameMaster
 
 pygame.init()
@@ -14,8 +14,8 @@ pygame.display.set_caption("PixelWar")
 grille = Grille(10, 10, screen_width, screen_height,screen)
 grille.place_agent(1, 1,1)
 grille.place_agent(3, 5,2)
-a1=AgentTest(1,1,1)
-a2=AgentTest(2,3,5)
+a1=Agent(1,1,1)
+a2=Agent(2,3,5)
 master=GameMaster(a1,a2)
 running = True
 while running:
