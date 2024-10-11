@@ -7,7 +7,12 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
-
+ORANGE = (255,128,0)
+CYAN = (0,255,255)
+MAGENTA = (255,0,255)
+GRAY = (128,128,128)
+PURPLE = (128,0,128)
+PINK = (255,71,179)
 class Grille:
 
     def __init__(self, n:int, m:int, screen_width:int, screen_height:int,screen):
@@ -98,6 +103,7 @@ class Grille:
         if 0 <= x < self.m and 0 <= y < self.n:
             if self.grid[y][x]>=0:
                 self.grid[y][x] = team
+
 
     def remove_agent(self, x:int, y:int):
             """Retirer un objet de la position (x, y) dans la grille"""
