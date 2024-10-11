@@ -1,18 +1,9 @@
 import pygame
 import random
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
-GREEN = (0, 255, 0)
-ORANGE = (255,128,0)
-CYAN = (0,255,255)
-MAGENTA = (255,0,255)
-GRAY = (128,128,128)
-PURPLE = (128,0,128)
-PINK = (255,71,179)
+from Color.Color import Color
+
+
 class Grille:
 
     def __init__(self, n:int, m:int, screen_width:int, screen_height:int,screen):
@@ -27,17 +18,18 @@ class Grille:
 
     def draw(self):
         """Dessiner la grille sur l'écran"""
-        self.screen.fill(WHITE)
+        self.screen.fill(Color.WHITE.value)
         for x in range(self.m):
             for y in range(self.n):
                 rect = pygame.Rect(x * self.cell_width, y * self.cell_height, self.cell_width, self.cell_height)
-                pygame.draw.rect(self.screen, BLACK, rect, 1)  # Dessiner le contour des cases
+                pygame.draw.rect(self.screen, Color.BLACK.value, rect, 1)  # Dessiner le contour des cases
                 if self.grid[y][x] == -1:
-                    pygame.draw.rect(self.screen, BLACK, rect)
+                    pygame.draw.rect(self.screen, Color.BLACK.value, rect)
                 if self.grid[y][x] == 1:
-                    pygame.draw.rect(self.screen, YELLOW, rect)
+                    pygame.draw.rect(self.screen, Color.YELLOW.value, rect)
                 if self.grid[y][x] == 2:
-                    pygame.draw.rect(self.screen, GREEN, rect)
+                    pygame.draw.rect(self.screen, Color.CYAN.value, rect)
+
 
     def place_obstacle(self, x:int, y:int):
         """Placer un objet à la position (x, y) dans la grille"""
