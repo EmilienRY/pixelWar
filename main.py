@@ -1,48 +1,43 @@
 import pygame
 import sys
 from grille.grille import Grille
-from agent.AgentTest import AgentTest
+from agent.Agent import Agent
 from gameMaster.gameMaster import GameMaster
-from gameMaster.menu import Menu  # Import the new Menu class
 
 pygame.init()
-
 WHITE = (255, 255, 255)
 
 screen_width, screen_height = 800, 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("PixelWar")
 
-# Run the Menu and get game settings
-menu = Menu(screen)
-grid_width, grid_height, num_players = menu.run_menu()
+grille = Grille(10, 10, screen_width, screen_height,screen)
+grille.place_agent(1, 1,1)
+grille.place_agent(3, 5,2)
+grille.place_agent(4, 2,1)
+grille.place_agent(6, 6,2)
+grille.place_obstacle(0, 0)
+grille.place_random_obstacles(20)
 
-# Initialize the grid and game master based on the settings
-grille = Grille(grid_width, grid_height, screen_width, screen_height, screen)
 
-# Set up players
-agents = []
-for i in range(1, num_players + 1):
-    # You can place the players differently; for now, we'll put them in different coordinates
-    agents.append(AgentTest(i, i * 2, i * 2))  # Example placement
+a1=Agent(1,1,1)
+a2=Agent(2,3,5)
+a3=Agent(1,4,2)
+a4=Agent(2,6,6)
 
-master = GameMaster(*agents)
 
+master=GameMaster([a1,a2,a3,a4])
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-    current_player = master.AQuiDeJouer()
-
-    if current_player.numPlayer == 1:
-        master.tour(agents[0], grille)
-    elif current_player.numPlayer == 2 and num_players > 1:
-        master.tour(agents[1], grille)
-
+    if(master.AQuiDeJouer().numPlayer==1):
+        master.tour(a1,grille)
+    else:
+        master.tour(a2,grille)
     pygame.display.flip()
 
-# Quit Pygame properly
+# Quitter Pygame proprement
 pygame.quit()
 sys.exit()

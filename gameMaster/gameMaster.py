@@ -1,20 +1,21 @@
-from agent.AgentTest import AgentTest
+from agent.Agent import Agent
 from grille.grille import Grille
 import time
 
 class GameMaster:
-    def __init__(self,p1:AgentTest,p2:AgentTest):
+    def __init__(self,listeAgents):
         self.nbTours=0
-        self.tabJoueur=[p1,p2]
+        self.tabJoueur=listeAgents
 
-    def AQuiDeJouer(self)->AgentTest:
+    def AQuiDeJouer(self)->Agent:
         return self.tabJoueur[0]
 
-    def tour(self,agent:AgentTest,g:Grille):
+    def tour(self,agent:Agent,g:Grille):
         self.nbTours+=1
         agent.jouer(g)
         self.tabJoueur.pop(0)
         self.tabJoueur.append(agent)
+        g.draw()
         time.sleep(0.5)
 
 
