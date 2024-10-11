@@ -23,10 +23,25 @@ class Grille:
             for y in range(self.n):
                 rect = pygame.Rect(x * self.cell_width, y * self.cell_height, self.cell_width, self.cell_height)
                 pygame.draw.rect(self.screen, BLACK, rect, 1)  # Dessiner le contour des cases
+                if self.grid[y][x] == -1:
+                    pygame.draw.rect(self.screen, BLACK, rect)
                 if self.grid[y][x] == 1:
                     pygame.draw.rect(self.screen, BLUE, rect)
                 if self.grid[y][x] == 2:
                     pygame.draw.rect(self.screen, RED, rect)
+
+    def place_obstacle(self, x:int, y:int):
+        """Placer un objet à la position (x, y) dans la grille"""
+        if 0 <= x < self.m and 0 <= y < self.n:
+                self.grid[y][x] = -1
+
+    def place_obstacles(self, x: int, x2: int, y: int):
+        """Placer un objet à la position (x, y) dans la grille"""
+        if 0 <= x < self.m and 0 <= y < self.n:
+            for i in range(x,x2+1,1):
+             self.grid[y][i] = -1
+
+
 
     def place_agent(self, x:int, y:int, team:int):
         """Placer un objet à la position (x, y) dans la grille"""
