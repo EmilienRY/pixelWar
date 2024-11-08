@@ -11,17 +11,17 @@ class GameMaster:
         tabEquipes = []
         for i in range(nbTeam):
             if i == 0:
-                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],0,0, n//3)
-                tabEquipes.append(equipe)
+                equipe1 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], 0, 0, n // 3)
+                tabEquipes.append(equipe1)
             elif i==1:
-                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],0,(n//3)*2,n-1)
-                tabEquipes.append(equipe)
+                equipe2 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], n - m // 3, 0, n // 3)
+                tabEquipes.append(equipe2)
             elif i==2:
-                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],(m//3)*2,0,n//3)
-                tabEquipes.append(equipe)
+                equipe3 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], 0, m - n // 3, m - 1)
+                tabEquipes.append(equipe3)
             elif i==3:
-                equipe = Equipe(nbAgentsParTeam,i+1,listeColor[i],(m//3)*2,(n//3)*2,n-1)
-                tabEquipes.append(equipe)
+                equipe4 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], n - m // 3, m - n // 3, m - 1)
+                tabEquipes.append(equipe4)
 
         self.nbTours=0
         self.tabEquipes=tabEquipes

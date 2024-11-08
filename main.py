@@ -12,7 +12,7 @@ pygame.display.set_caption("PixelWar")
 
 grille = Grille(20,20,screen_width, screen_height,screen)
 
-master = GameMaster(2, 20, 10, 10, grille)
+master = GameMaster(4, 25, 10, 10, grille)
 
 running = True
 while running:

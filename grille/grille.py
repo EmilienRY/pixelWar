@@ -27,7 +27,11 @@ class Grille:
                 if self.grid[y][x] == 1:
                     pygame.draw.rect(self.screen, Color.YELLOW.value, rect)
                 if self.grid[y][x] == 2:
+                    pygame.draw.rect(self.screen, Color.GREEN.value, rect)
+                if self.grid[y][x] == 3:
                     pygame.draw.rect(self.screen, Color.CYAN.value, rect)
+                if self.grid[y][x] == 4:
+                    pygame.draw.rect(self.screen, Color.PURPLE.value, rect)
 
 
     def place_obstacle(self, x:int, y:int):
