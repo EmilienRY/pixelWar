@@ -31,7 +31,6 @@ class GameMaster:
                 g.place_agent(self.tabEquipes[i].listeEquipier[j].x, self.tabEquipes[i].listeEquipier[j].y, self.tabEquipes[i].numEquipe)
 
         self.grille=g
-
         g.draw()
         self.grille.place_obstacle(0, 0)
         self.grille.place_random_obstacles(20)

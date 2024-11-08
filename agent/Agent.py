@@ -17,7 +17,7 @@ class Agent:
                 x=random.randint(self.x-1, self.x+1)
                 e=self.avancer(g,x,self.y)
             elif nombre_aleatoire == 1:
-                y=random.randint(self.y, self.y+1)
+                y=random.randint(self.y-1, self.y+1)
                 e=self.avancer(g,self.x,y)
             else:
                 e=self.attendre()
@@ -40,17 +40,3 @@ class Agent:
 
     def attendre(self):
         pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
