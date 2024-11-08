@@ -4,7 +4,6 @@ from grille.grille import Grille
 from gameMaster.gameMaster import GameMaster
 
 pygame.init()
-WHITE = (255, 255, 255)
 
 screen_width, screen_height = 800, 600
 screen = pygame.display.set_mode((screen_width, screen_height))

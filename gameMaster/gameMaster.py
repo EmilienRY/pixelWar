@@ -43,7 +43,9 @@ class GameMaster:
         self.nbTours += 1
         equipe=self.tabEquipes.pop(0)
         player=equipe.listeEquipier.pop(0)
-        player.jouer(g)
+        miammiam=player.jouer(g)
+        if miammiam!=(0,0):
+            g.grid[miammiam[0]][miammiam[1]]=0
         equipe.listeEquipier.append(player)
         self.tabEquipes.append(equipe)
         g.draw()
