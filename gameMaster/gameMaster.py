@@ -1,58 +1,86 @@
-from agent.Agent import Agent
 from equipe.Equipe import Equipe
 from grille.grille import Grille
-import time
-
-listeColor=[(0, 0, 255),(255, 0, 0),(255, 255, 0),(0, 255, 0)]
+from typing import List, Tuple, Optional
+from Color.Color import Color
 
 class GameMaster:
+    coulTeam = [Color.PURPLE,Color.GREEN, Color.YELLOW, Color.RED]
+    posTeam = [
+        lambda n, m: (0, 0, n // 3),  # Team 1
+        lambda n, m: (n - m // 3, 0, n // 3),  # Team 2
+        lambda n, m: (0, m - n // 3, m - 1),  # Team 3
+        lambda n, m: (n - m // 3, m - n // 3, m - 1)  # Team 4
+    ]
 
-    def __init__(self, nbTeam, nbAgentsParTeam, n, m,g:Grille):
-        tabEquipes = []
-        for i in range(nbTeam):
-            if i == 0:
-                equipe1 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], 0, 0, n // 3)
-                tabEquipes.append(equipe1)
-            elif i==1:
-                equipe2 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], n - m // 3, 0, n // 3)
-                tabEquipes.append(equipe2)
-            elif i==2:
-                equipe3 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], 0, m - n // 3, m - 1)
-                tabEquipes.append(equipe3)
-            elif i==3:
-                equipe4 = Equipe(nbAgentsParTeam, i + 1, listeColor[i], n - m // 3, m - n // 3, m - 1)
-                tabEquipes.append(equipe4)
+    def __init__(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int, grid: Grille):
 
-        self.nbTours=0
-        self.tabEquipes=tabEquipes
+        self.nb_tours = 0
+        self.grid = grid
+        self.teams = self.initTeam(nb_teams, nbAgentsParEquipe, n, m)
+        self.placeTeamEtObstacles()
 
-        for i in range(nbTeam):
-            for j in range(nbAgentsParTeam):
-                g.place_agent(self.tabEquipes[i].listeEquipier[j].x, self.tabEquipes[i].listeEquipier[j].y, self.tabEquipes[i].numEquipe)
+    def initTeam(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int) -> List[Equipe]:
+        teams = []
+        for i in range(nb_teams):
+            start_x, start_y, limit = self.posTeam[i](n, m)
+            team = Equipe(nbAgentsParEquipe, i + 1, self.coulTeam[i], start_x, start_y, limit)
+            teams.append(team)
+        return teams
 
-        self.grille=g
-        g.draw()
-        self.grille.place_obstacle(0, 0)
-        self.grille.place_random_obstacles(20)
+    def placeTeamEtObstacles(self):
+        for team in self.teams:
+            for agent in team.listeEquipier:
+                self.grid.place_agent(agent.x, agent.y, team.numEquipe)
 
+        self.grid.place_obstacle(0, 0)
+        self.grid.place_random_obstacles(20)
+        self.grid.draw()
 
-    def AQuiDeJouer(self) -> Equipe:
-        return self.tabEquipes[0]
+    def quiJoue(self) -> Equipe: #retourne team qui doit jouer
+        return self.teams[0]
 
-    def tour(self,g:Grille):
-        self.nbTours += 1
-        equipe=self.tabEquipes.pop(0)
-        player=equipe.listeEquipier.pop(0)
-        miammiam=player.jouer(g)
-        if miammiam!=(0,0):
-            g.grid[miammiam[0]][miammiam[1]]=0
-        equipe.listeEquipier.append(player)
-        self.tabEquipes.append(equipe)
-        g.draw()
+    def testFin(self) -> Tuple[bool, Optional[Equipe]]:
 
+        teamEnJeu = [team for team in self.teams if team.listeEquipier]
+        if len(teamEnJeu) == 1:
+            return True, teamEnJeu[0]
+        return False, None
 
+    def tour(self) -> bool: # retourne false quand le jeu est fini
 
+        game_over, winner = self.testFin()
+        if game_over:
+            print(f"Jeu terminé! L'équipe {winner.numEquipe} a gagné!")
+            return False
 
+        self.nb_tours += 1
+        teamQuiJoue = self.teams.pop(0)
 
+        if teamQuiJoue.listeEquipier:
+            joeur = teamQuiJoue.listeEquipier.pop(0)
+            action = joeur.jouer(self.grid)
 
+            if action != (0, 0):
+                self.suprAgentManger(action)
 
+            teamQuiJoue.listeEquipier.append(joeur)
+
+        self.teams.append(teamQuiJoue)
+        self.grid.draw()
+        return True
+
+    def suprAgentManger(self, position: Tuple[int, int]):
+        x, y = position
+        for team in self.teams:
+            team.listeEquipier = [agent for agent in team.listeEquipier
+                                  if not (agent.x == x and agent.y == y)]
+        self.grid.grid[y][x] = 0
+
+    def etatDujeu(self) -> dict:
+        return {
+            'nb_tours': self.nb_tours,
+            'statu equipe': [{
+                'num equipe': team.numEquipe,
+                'agents restant': len(team.listeEquipier)
+            } for team in self.teams]
+        }
