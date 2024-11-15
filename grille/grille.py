@@ -15,7 +15,7 @@ class Grille:
         self.cell_height = screen_height // n
         self.grid = [[0 for _ in range(m)] for _ in range(n)]  # Matrice n*m remplie de 0
 
-    def draw(self):
+    def draw(self,coulTeam):
         """Dessiner la grille sur l'écran"""
         self.screen.fill(Color.WHITE.value)
         for x in range(self.m):
@@ -25,13 +25,13 @@ class Grille:
                 if self.grid[y][x] == -1:
                     pygame.draw.rect(self.screen, Color.BLACK.value, rect)
                 if self.grid[y][x] == 1:
-                    pygame.draw.rect(self.screen, Color.YELLOW.value, rect)
+                    pygame.draw.rect(self.screen, coulTeam[0].value, rect)
                 if self.grid[y][x] == 2:
-                    pygame.draw.rect(self.screen, Color.GREEN.value, rect)
+                    pygame.draw.rect(self.screen, coulTeam[1].value, rect)
                 if self.grid[y][x] == 3:
-                    pygame.draw.rect(self.screen, Color.CYAN.value, rect)
+                    pygame.draw.rect(self.screen, coulTeam[2].value, rect)
                 if self.grid[y][x] == 4:
-                    pygame.draw.rect(self.screen, Color.PURPLE.value, rect)
+                    pygame.draw.rect(self.screen, coulTeam[3].value, rect)
 
 
     def place_obstacle(self, x:int, y:int):

@@ -34,7 +34,7 @@ class GameMaster:
 
         self.grid.place_obstacle(0, 0)
         self.grid.place_random_obstacles(20)
-        self.grid.draw()
+        self.grid.draw(self.coulTeam)
 
     def quiJoue(self) -> Equipe: #retourne team qui doit jouer
         return self.teams[0]
@@ -66,7 +66,7 @@ class GameMaster:
             teamQuiJoue.listeEquipier.append(joeur)
 
         self.teams.append(teamQuiJoue)
-        self.grid.draw()
+        self.grid.draw(self.coulTeam)
         return True
 
     def suprAgentManger(self, position: Tuple[int, int]):
