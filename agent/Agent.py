@@ -2,6 +2,34 @@ from grille.grille import Grille
 import random
 import math
 
+
+def prochaine_case(depart, destination):
+    # Calcul des distances horizontales et verticales
+    distance_horizontale = abs(depart[0] - destination[0])
+    distance_verticale = abs(depart[1] - destination[1])
+
+    # Calcul de la somme des distances pour avoir la probabilité
+    total_distance = distance_horizontale + distance_verticale
+
+    if total_distance == 0:
+        return depart[0], depart[1]  # Cas où départ et destination sont identiques
+
+    # Générer un nombre aléatoire et comparer à la proportion horizontale
+    if random.random() < (distance_horizontale / total_distance):
+        # Effectuer un mouvement horizontal
+        if depart[0] > destination[0]:
+            return depart[0] - 1, depart[1]
+        elif depart[0] < destination[0]:
+            return depart[0] + 1, depart[1]
+    else:
+        # Effectuer un mouvement vertical
+        if depart[1] > destination[1]:
+            return depart[0], depart[1] - 1
+        elif depart[1] < destination[1]:
+            return depart[0], depart[1] + 1
+
+    return depart[0], depart[1]
+
 class Agent:
     def __init__(self, numJoueur: int, numEquipe: int, x: int, y: int):
 
@@ -22,19 +50,35 @@ class Agent:
 
         tentatives = 0
         while tentatives < self.max_tentatives:
-            if random.choice([True, False]):
-                new_x = self.x + random.choice([-1, 1])
-                new_y = self.y
-            else:  # Mouvement vertical
-                new_x = self.x
-                new_y = self.y + random.choice([-1, 1])
-
-            if self.avancer(g, new_x, new_y):
+            if self.moveClosest(g):
                 break
 
             tentatives += 1
 
         return (0, 0)
+
+    def moveRandom(self, g: Grille) -> bool:
+        if random.choice([True, False]):
+            new_x = self.x + random.choice([-1, 1])
+            new_y = self.y
+        else:  # Mouvement vertical
+            new_x = self.x
+            new_y = self.y + random.choice([-1, 1])
+
+        if self.avancer(g, new_x, new_y):
+            return True
+        else:
+            return False
+
+    def moveClosest(self, g: Grille) -> bool:
+        closestEnemy = self.getClosestEnemy(g)
+        if closestEnemy != (0, 0):
+            nextMove = prochaine_case((self.x, self.y), closestEnemy)
+            if nextMove != (-1, -1):
+                if self.avancer(g, nextMove[0], nextMove[1]):
+                    return True
+        return False
+
 
     def verifier_obstacle_adjacent(self, g: Grille) -> bool: # verif si obstacle a coté
 
@@ -52,23 +96,7 @@ class Agent:
         return False
 
     def peut_manger(self, g: Grille, enemy_pos: tuple) -> bool:
-
-        enemy_x, enemy_y = enemy_pos
-
-        if self.x == enemy_x:
-            if abs(self.y - enemy_y) == 2:
-                middle_y = (self.y + enemy_y) // 2
-                return (g.grid[middle_y][self.x] == 0 and
-                        g.grid[enemy_y][enemy_x] > 0 and
-                        g.grid[enemy_y][enemy_x] != self.numEquipe)
-        elif self.y == enemy_y:
-            if abs(self.x - enemy_x) == 2:
-                middle_x = (self.x + enemy_x) // 2
-                return (g.grid[self.y][middle_x] == 0 and
-                        g.grid[enemy_y][enemy_x] > 0 and
-                        g.grid[enemy_y][enemy_x] != self.numEquipe)
-
-        return False
+        return abs(self.x - enemy_pos[0]) + abs(self.y - enemy_pos[1]) < 2
 
     def avancer(self, g: Grille, x: int, y: int) -> bool:
 
