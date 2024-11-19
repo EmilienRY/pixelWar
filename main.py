@@ -25,7 +25,7 @@ def main():
     policeTitre = pygame.font.Font(None, 36)
     policeInfo = pygame.font.Font(None, 24)
     clock = pygame.time.Clock()
-    nbToursSecondes = 5 # nb de tour par secondes
+    nbToursSecondes = 2 # nb de tour par secondes
 
     def drawBarreCote(etatJeu):
         sidebar_rect = pygame.Rect(game_width, 0, sidebar_width, screen_height)

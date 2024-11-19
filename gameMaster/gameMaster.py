@@ -7,9 +7,9 @@ class GameMaster:
     coulTeam = [Color.PURPLE,Color.GREEN, Color.YELLOW, Color.RED]
     posTeam = [
         lambda n, m: (0, 0, n // 3),  # Team 1
-        lambda n, m: (n - m // 3, 0, n // 3),  # Team 2
+        lambda n, m: (n - m // 3, m - n // 3, m - 1),  # Team 2
         lambda n, m: (0, m - n // 3, m - 1),  # Team 3
-        lambda n, m: (n - m // 3, m - n // 3, m - 1)  # Team 4
+        lambda n, m: (n - m // 3, 0, n // 3)  # Team 4
     ]
 
     def __init__(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int, grid: Grille):
