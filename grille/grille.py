@@ -2,6 +2,7 @@ import pygame
 import random
 import math
 from Color.Color import Color
+from collections import deque
 
 
 class Grille:
@@ -119,10 +120,3 @@ class Grille:
             """Retirer un objet de la position (x, y) dans la grille"""
             if 0 <= x < self.m and 0 <= y < self.n:
                 self.grid[y][x] = 0
-
-
-
-
-
-
-
