@@ -19,12 +19,17 @@ def main():
     acceuil=Menu(screen)
     acceuil.run_menu()
     nbTeam=acceuil.num_team
-    nbAgetPerTeam=acceuil.num_agent
+    nbAgentPerTeam=acceuil.num_agent
     nbLigne=acceuil.grid_height
     nbColone=acceuil.grid_width
+    ColorTeam1=acceuil.color[acceuil.i]
+    ColorTeam2=acceuil.color[acceuil.j]
+    ColorTeam3=acceuil.color[acceuil.k]
+    ColorTeam4=acceuil.color[acceuil.l]
+    colorTeams= [ColorTeam1,ColorTeam2,ColorTeam3,ColorTeam4]
     grille = Grille(nbLigne, nbColone, game_width, game_height, screen)
     try:
-        master = GameMaster(nbTeam, nbAgetPerTeam, nbLigne, nbColone, grille)
+        master = GameMaster(nbTeam, nbAgentPerTeam, nbLigne, nbColone, grille, colorTeams)
     except ValueError as e:
         print(f"Erreur lors de l'initialisation du jeu : {e}")
         return
@@ -57,7 +62,7 @@ def main():
 
         y_offset += 40
         for team in etatJeu['statu equipe']:
-            team_color = GameMaster.coulTeam[team['num equipe'] - 1]
+            team_color = colorTeams[team['num equipe'] - 1]
             pygame.draw.rect(screen, team_color.value,
                              (game_width + 10, y_offset, 20, 20))
 
