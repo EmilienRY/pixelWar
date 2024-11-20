@@ -19,6 +19,7 @@ def main():
     acceuil=Menu(screen)
     acceuil.run_menu()
     nbTeam=acceuil.num_team
+    nbObs=acceuil.nb_obs
     nbAgentPerTeam=acceuil.num_agent
     nbLigne=acceuil.grid_height
     nbColone=acceuil.grid_width
@@ -29,7 +30,7 @@ def main():
     colorTeams= [ColorTeam1,ColorTeam2,ColorTeam3,ColorTeam4]
     grille = Grille(nbLigne, nbColone, game_width, game_height, screen)
     try:
-        master = GameMaster(nbTeam, nbAgentPerTeam, nbLigne, nbColone, grille, colorTeams)
+        master = GameMaster(nbTeam, nbAgentPerTeam, nbLigne, nbColone, grille, colorTeams,nbObs)
     except ValueError as e:
         print(f"Erreur lors de l'initialisation du jeu : {e}")
         return
@@ -103,7 +104,8 @@ def main():
 
             if not master.tour():
                 game_state = master.etatDujeu()
-                text = policeTitre.render(f"Jeu terminé ! Tour final : {game_state['nb_tours']}", True, (255, 0, 0))
+                team_color = colorTeams[master.numTeamGagnante-1]
+                text = policeTitre.render(f"Jeu terminé ! La team {master.numTeamGagnante} a gagné au tour : {game_state['nb_tours']}", True, team_color.value)
                 text_rect = text.get_rect(center=(game_width // 2, game_height // 2))
                 screen.blit(text, text_rect)
                 pygame.display.flip()

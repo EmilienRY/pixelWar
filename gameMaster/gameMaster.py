@@ -11,13 +11,14 @@ class GameMaster:
         lambda n, m: (n - m // 3, 0, n // 3)  # Team 4
     ]
 
-    def __init__(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int, grid: Grille, coulTeam:[]):
-
+    def __init__(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int, grid: Grille, coulTeam:[],nbObs):
+        self.nb_obstacles = nbObs
         self.nb_tours = 0
         self.grid = grid
         self.coulTeam=coulTeam
         self.teams = self.initTeam(nb_teams, nbAgentsParEquipe, n, m)
         self.placeTeamEtObstacles()
+        self.numTeamGagnante=0
 
     def initTeam(self, nb_teams: int, nbAgentsParEquipe: int, n: int, m: int) -> List[Equipe]:
         teams = []
@@ -33,7 +34,7 @@ class GameMaster:
                 self.grid.place_agent(agent.x, agent.y, team.numEquipe)
 
         self.grid.place_obstacle(0, 0)
-        self.grid.place_random_obstacles(20)
+        self.grid.place_random_obstacles(self.nb_obstacles)
         self.grid.draw(self.coulTeam)
 
     def quiJoue(self) -> Equipe: #retourne team qui doit jouer
@@ -50,6 +51,7 @@ class GameMaster:
 
         game_over, winner = self.testFin()
         if game_over:
+            self.numTeamGagnante=winner.numEquipe
             print(f"Jeu terminé! L'équipe {winner.numEquipe} a gagné!")
             return False
 

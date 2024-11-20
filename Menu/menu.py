@@ -11,6 +11,7 @@ class Menu:
         self.grid_height = 10
         self.num_team = 2  # Default number of team
         self.num_agent = 2
+        self.nb_obs=20
         self.color=[Color.BLUE,Color.RED,Color.YELLOW,Color.GREEN,Color.ORANGE,Color.CYAN,Color.MAGENTA,Color.GRAY,Color.PURPLE,Color.PINK]
         self.i=0
         self.j=1
@@ -66,9 +67,13 @@ class Menu:
             self.draw_arrow(400, 270, 'left')
             self.draw_arrow(440, 270, 'right')
 
-            self.draw_text('Press Enter to Start', 20, 300, Color.BLACK.value)
+            self.draw_text(f'nombre d\'obstacles: {self.nb_obs}', 20, 300, Color.BLACK.value)
+            self.draw_arrow(400, 310, 'left')
+            self.draw_arrow(440, 310, 'right')
 
-            self.draw_text("Caution Two Different Team Can't Have The Same Color", 20, 340, Color.RED.value)
+            self.draw_text('Press Enter to Start', 20, 340, Color.BLACK.value)
+
+            self.draw_text("Caution Two Different Team Can't Have The Same Color", 20, 380, Color.RED.value)
             self.alert=False
 
             for event in pygame.event.get():
@@ -98,7 +103,7 @@ class Menu:
                         if 390 <= mouse_x <= 410 and self.grid_width > 1:
                             self.grid_width -= 1
                             self.grid_height -= 1
-                        elif 430 <= mouse_x <= 450 and self.grid_width < 20:
+                        elif 430 <= mouse_x <= 450 and self.grid_width < 40:
                             self.grid_width += 1
                             self.grid_height += 1
 
@@ -141,7 +146,13 @@ class Menu:
                     if 250 <= mouse_y <= 270:
                         if 390 <= mouse_x <= 410 and self.num_agent > 1:
                             self.num_agent -= 1
-                        elif 430 <= mouse_x <= 450 and self.num_agent < 20:
+                        elif 430 <= mouse_x <= 450 and self.num_agent < 50:
                             self.num_agent += 1
+
+                    if 290 <= mouse_y <= 310:
+                        if 390 <= mouse_x <= 410 and self.nb_obs > 1:
+                            self.nb_obs -= 1
+                        elif 430 <= mouse_x <= 450 and self.nb_obs < 300:
+                            self.nb_obs += 1
 
             pygame.display.flip()
