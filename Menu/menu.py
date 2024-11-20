@@ -18,6 +18,7 @@ class Menu:
         self.k=2
         self.l=3
         self.alert=False
+        self.nbToursSec=2
 
     def draw_text(self, text, x, y, color):
         text_surface = self.font.render(text, True, color)
@@ -71,9 +72,13 @@ class Menu:
             self.draw_arrow(400, 310, 'left')
             self.draw_arrow(440, 310, 'right')
 
-            self.draw_text('Press Enter to Start', 20, 340, Color.BLACK.value)
+            self.draw_text(f'nombre de tour par seconde: {self.nbToursSec}', 20, 340, Color.BLACK.value)
+            self.draw_arrow(400, 350, 'left')
+            self.draw_arrow(440, 350, 'right')
 
-            self.draw_text("Caution Two Different Team Can't Have The Same Color", 20, 380, Color.RED.value)
+            self.draw_text('Press Enter to Start', 20, 380, Color.BLACK.value)
+
+            self.draw_text("Caution Two Different Team Can't Have The Same Color", 20, 420, Color.RED.value)
             self.alert=False
 
             for event in pygame.event.get():
@@ -154,5 +159,11 @@ class Menu:
                             self.nb_obs -= 1
                         elif 430 <= mouse_x <= 450 and self.nb_obs < 300:
                             self.nb_obs += 1
+
+                    if 330 <= mouse_y <= 350:
+                        if 390 <= mouse_x <= 410 and self.nb_obs > 1:
+                            self.nbToursSec -= 1
+                        elif 430 <= mouse_x <= 450 and self.nb_obs < 100:
+                            self.nbToursSec += 1
 
             pygame.display.flip()

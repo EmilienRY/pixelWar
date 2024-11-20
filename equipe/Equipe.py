@@ -12,6 +12,10 @@ class Equipe:
 
         listeEquipier=[]
 
+        self.nbAgro=0
+        self.nbDef=0
+        self.nbFou=0
+
         x=xStart
         y=yStart
 
@@ -24,4 +28,15 @@ class Equipe:
 
             a=Agent(i,numEquipe,x,y)
             listeEquipier.append(a)
+
         self.listeEquipier=listeEquipier
+        self.compterTyp()
+
+    def compterTyp(self):
+        for a in self.listeEquipier:
+            if a.comportement == "agressif":
+                self.nbAgro+=1
+            elif a.comportement == "defensif":
+                self.nbDef+=1
+            elif a.comportement == "fou":
+                self.nbFou+=1

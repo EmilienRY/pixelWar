@@ -114,6 +114,9 @@ class Grille:
         for ligne in self.grid:
             print(ligne)
 
+    def est_case_vide(self,nx,ny):
+        return self.grid[nx][ny] == 0
+
 
 
     def remove_agent(self, x:int, y:int):

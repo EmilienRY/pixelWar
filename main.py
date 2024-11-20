@@ -9,8 +9,8 @@ def main():
     pygame.init()
 
 
-    game_width, game_height = 600, 600  # Zone de jeu carrée
-    sidebar_width = 200  # zone des infos
+    game_width, game_height = 900, 900
+    sidebar_width = 800  # zone des infos
     screen_width = game_width + sidebar_width
     screen_height = game_height
 
@@ -38,7 +38,7 @@ def main():
     policeTitre = pygame.font.Font(None, 36)
     policeInfo = pygame.font.Font(None, 24)
     clock = pygame.time.Clock()
-    nbToursSecondes = 2 # nb de tour par secondes
+    nbToursSecondes = acceuil.nbToursSec # nb de tour par secondes
 
     def drawBarreCote(etatJeu):
         sidebar_rect = pygame.Rect(game_width, 0, sidebar_width, screen_height)
@@ -83,8 +83,83 @@ def main():
         screen.blit(stats_title, (game_width + 10, y_offset + 20))
 
         y_offset += 60
-        stats_placeholder = policeInfo.render("(Statistiques à venir)", True, (100, 100, 100))
-        screen.blit(stats_placeholder, (game_width + 10, y_offset))
+
+        sorted_teams = sorted(etatJeu['statu equipe'], key=lambda x: x['num equipe'])
+
+        for team_info in sorted_teams:
+            team = team_info['team']
+
+            obstacles_detruits = sum(agent.cptOstaclesdetruit for agent in team.listeEquipier)
+            mouvements_aleatoires = sum(agent.mouvAleatoir for agent in team.listeEquipier)
+            mouvements_non_aleatoires = sum(agent.mouvPasAleatoir for agent in team.listeEquipier)
+            nbAgentsMange = sum(agent.nbAgentsMange for agent in team.listeEquipier)
+            AgroCasseObs = sum(agent.AgroCasseObs for agent in team.listeEquipier)
+            defAMange = sum(agent.defAMange for agent in team.listeEquipier)
+            distanceParcouru = sum(agent.distanceParcouru for agent in team.listeEquipier)
+            defAFui = sum(agent.defAFui for agent in team.listeEquipier)
+
+
+            stats_team_textTyp = policeInfo.render(
+                f"Équipe {team.numEquipe} - agressifs: {team.nbAgro}, défensifs: {team.nbDef},fous: {team.nbFou} ",
+                True, (0, 0, 0)
+            )
+
+            statsObsDetr = policeInfo.render(
+                f"Équipe {team.numEquipe} - Obstacles détruits: {obstacles_detruits}",
+                True, (0, 0, 0)
+            )
+            statsMvtAlea = policeInfo.render(
+                f"Équipe {team.numEquipe} - Mvt aléatoires: {mouvements_aleatoires}",
+                True, (0, 0, 0)
+            )
+            statsMvtNonAlea = policeInfo.render(
+                f"Équipe {team.numEquipe} - Mvt non-aléatoires: {mouvements_non_aleatoires}",
+                True, (0, 0, 0)
+            )
+
+            statAgenMange = policeInfo.render(
+                f"Équipe {team.numEquipe} - Agents mangé {nbAgentsMange} ",
+                True, (0, 0, 0)
+            )
+
+            statsAgroCasse = policeInfo.render(
+                f"Équipe {team.numEquipe} - Obstacles détruits par agressif: {AgroCasseObs}",
+                True, (0, 0, 0)
+            )
+            statDefMange = policeInfo.render(
+                f"Équipe {team.numEquipe} - agents mangé par défensif: {defAMange}",
+                True, (0, 0, 0)
+            )
+            statDistance = policeInfo.render(
+                f"Équipe {team.numEquipe} - distance parcourue: {distanceParcouru}",
+                True, (0, 0, 0)
+            )
+            statDefFui = policeInfo.render(
+                f"Équipe {team.numEquipe} - defensif a fui: {defAFui}",
+                True, (0, 0, 0)
+            )
+
+            x_colonne1 = game_width + 10
+            x_colonne2 = game_width + 400
+            screen.blit(stats_team_textTyp, (x_colonne1, y_offset))
+            y_offset += 25
+            screen.blit(statsObsDetr, (x_colonne1, y_offset))
+            y_offset += 25
+            screen.blit(statsMvtAlea, (x_colonne1 , y_offset))
+            y_offset += 25
+            screen.blit(statsMvtNonAlea, (x_colonne1, y_offset))
+            y_offset-=75
+            screen.blit(statAgenMange, (x_colonne2, y_offset))
+            y_offset += 25
+            screen.blit(statsAgroCasse, (x_colonne2, y_offset))
+            y_offset += 25
+            screen.blit(statDefMange, (x_colonne2, y_offset))
+            y_offset += 25
+            screen.blit(statDistance, (x_colonne2, y_offset))
+            y_offset += 25
+            screen.blit(statDefFui, (x_colonne2, y_offset))
+
+            y_offset += 35
 
     running = True
     paused = False

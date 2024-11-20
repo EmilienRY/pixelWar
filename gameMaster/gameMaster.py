@@ -83,6 +83,7 @@ class GameMaster:
             'nb_tours': self.nb_tours,
             'statu equipe': [{
                 'num equipe': team.numEquipe,
-                'agents restant': len(team.listeEquipier)
+                'agents restant': len(team.listeEquipier),
+                'team':team
             } for team in self.teams]
         }

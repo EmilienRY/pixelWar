@@ -39,9 +39,22 @@ class Agent:
         self.y = y
         self.max_tentatives = 10
 
-        self.cptOstaclesdetruit=0;
-        self.mouvAleatoir=0;
-        self.mouvPasAleatoir=0;
+        self.cptOstaclesdetruit=0
+        self.mouvAleatoir=0
+        self.mouvPasAleatoir=0
+        self.nbAgentsMange=0
+        self.AgroCasseObs=0
+        self.defAMange=0
+        self.distanceParcouru=0
+        self.defAFui=0
+
+        self.comportement = random.choices(
+            ["agressif", "defensif", "fou"],
+            weights=[0.4, 0.4, 0.2],
+            k=1
+        )[0]
+
+
 
 
 
@@ -54,94 +67,132 @@ class Agent:
         else:
             return False
 
-
-
-    def sontCollés(self, ennemi):
-
-        dx = abs(self.x - ennemi[0])
-        dy = abs(self.y - ennemi[1])
-
-        return (dx == 1 and dy == 0) or (dx == 0 and dy == 1)
-
-
+    def jump(self,g: Grille,enemy_pos ):
+        newX=int((self.x+enemy_pos[0])/2)
+        newY=int((self.y+enemy_pos[1])/2)
+        self.avancer(g, newX, newY)
 
 
     def jouer(self, g: Grille):
+        if self.comportement == "fou":
+            if self.moveRandom(g):
+                return (0, 0)
+        elif self.comportement == "agressif":
+            action=self.action_agressive(g)
+            if action[0]:
+                return action[1] if action[1] != None else (0,0)
+        elif self.comportement == "defensif":
+            action=self.action_defensive(g)
+            if action[0]:
+                return action[1] if action[1] != None else (0,0)
 
-        enemy_pos = self.getClosestEnemy(g)
-        if enemy_pos != (0, 0) and self.peut_manger(g,enemy_pos):
-            if( abs(self.x-enemy_pos[0])==2 or abs(self.x-enemy_pos[1]==2) ):
-                self.moveClosest(g)
-            return enemy_pos
-
-
-        obstacle = self.verifier_obstacle_adjacent(g)
-
-        if obstacle[0]:
-            x ,y = obstacle[1]
-            self.casseObstacle(g, x, y)
-            return (0, 0)
-
-        tentatives = 0
-        while tentatives < self.max_tentatives:
-            if self.moveClosest(g):
-                break
-
-            tentatives += 1
-
+        self.moveRandom(g)
         return (0, 0)
 
-    def moveRandom(self, g: Grille) -> bool:
-        self.mouvAleatoir+=1
-        if random.choice([True, False]):
-            new_x = self.x + random.choice([-1, 1])
-            new_y = self.y
-        else:  # Mouvement vertical
-            new_x = self.x
-            new_y = self.y + random.choice([-1, 1])
+    def action_agressive(self, g: Grille):
+        enemy_pos = self.getClosestEnemy(g)
+        if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos):
+            if abs(self.x - enemy_pos[0]) == 2 or abs(self.y - enemy_pos[1]) == 2:
+                self.jump(g, enemy_pos)
+            self.nbAgentsMange+=1
+            return (True,enemy_pos)
 
-        if self.avancer(g, new_x, new_y):
-            return True
-        else:
-            return False
+        if self.moveClosest(g):
+            return (True,None)
+
+        obstacle = self.verifier_obstacle_adjacent(g)
+        if obstacle[0]:
+            x, y = obstacle[1]
+            self.casseObstacle(g, x, y)
+            self.AgroCasseObs+=1
+            return (True,None)
+
+        return (False,None)
+
+
+    def action_defensive(self, g: Grille):
+        enemy_pos = self.getClosestEnemy(g)
+        if enemy_pos != (0, 0) and self.vaSeFaireManger(self.x, self.y, enemy_pos):
+            if self.moveRandom(g):
+                self.defAFui+=1
+                return (True,None)
+
+        obstacle = self.verifier_obstacle_adjacent(g)
+        if obstacle[0]:
+            x, y = obstacle[1]
+            self.casseObstacle(g, x, y)
+            return (True,None)
+
+        enemy_pos = self.getClosestEnemy(g)
+        if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos):
+            if abs(self.x - enemy_pos[0]) == 2 or abs(self.y - enemy_pos[1]) == 2:
+                self.jump(g, enemy_pos)
+            self.defAMange+=1
+            self.nbAgentsMange+=1
+            return (True,enemy_pos)
+
+        if self.moveRandom(g):
+            return (True,None)
+
+        return (False,None)
+
+    def moveRandom(self, g: Grille) -> bool:
+        self.mouvAleatoir += 1
+        for _ in range(self.max_tentatives):
+            if random.choice([True, False]):
+                new_x = self.x + random.choice([-1, 1])
+                new_y = self.y
+            else:
+                new_x = self.x
+                new_y = self.y + random.choice([-1, 1])
+
+            if self.avancer(g, new_x, new_y):
+                return True
+        return False
+
 
     def moveClosest(self, g: Grille) -> bool:
         self.mouvPasAleatoir+=1
         closestEnemy = self.getClosestEnemy(g)
         if closestEnemy != (0, 0):
             nextMove = prochaine_case((self.x, self.y), closestEnemy)
-            if nextMove != (-1, -1):
+            if not self.vaSeFaireManger(nextMove[0], nextMove[1], closestEnemy):
                 if self.avancer(g, nextMove[0], nextMove[1]):
                     return True
+
         return False
 
 
-    def verifier_obstacle_adjacent(self, g: Grille): # verif si obstacle a coté
-
+    def verifier_obstacle_adjacent(self, g: Grille, use_strategy=True):
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-
         for dx, dy in directions:
             new_x = self.x + dx
             new_y = self.y + dy
+            if (0 <= new_x < g.m and 0 <= new_y < g.n and g.grid[new_y][new_x] == -1):
+                if use_strategy:
+                    closestEnemy = self.getClosestEnemy(g)
+                    if closestEnemy != (0, 0):
+                        if abs(new_x - closestEnemy[0]) + abs(new_y - closestEnemy[1]) > 2:
+                            return (True, (new_x, new_y))
+                else:
+                    return (True, (new_x, new_y))
+        return (False, (None, None))
 
-            if (0 <= new_x < g.m and 0 <= new_y < g.n and
-                    g.grid[new_y][new_x] == -1):
-                return (True,(new_x,new_y))
 
-        return (False,(None,None))
-
-    def peut_manger(self, grille: Grille ,enemy_pos: tuple) -> bool:
+    def peut_manger(self, grille: Grille, enemy_pos: tuple) -> bool:
         dx = abs(self.x - enemy_pos[0])
         dy = abs(self.y - enemy_pos[1])
 
-        ecard = True if (self.x - enemy_pos[0] == 2 or self.x - enemy_pos[0] == -2) or (self.y - enemy_pos[1] == 2 or self.y - enemy_pos[1] == -2) else False
-        if (dx <= 2 and dy == 0) or (dy <= 2 and dx == 0):
-            if ecard :
-                return grille.grid[int((self.x+enemy_pos[0])/2)][int((self.y+enemy_pos[1])/2)] != -1
-            else:
-                return True
-        else:
+        if not ((dx <= 2 and dy == 0) or (dy <= 2 and dx == 0)):
             return False
+
+        mid_x = int((self.x + enemy_pos[0]) / 2)
+        mid_y = int((self.y + enemy_pos[1]) / 2)
+
+        if grille.grid[mid_y][mid_x] == -1:
+            return False
+
+        return True
 
     def avancer(self, g: Grille, x: int, y: int) -> bool:
 
@@ -156,6 +207,7 @@ class Agent:
         if e:
             self.x = x
             self.y = y
+        self.distanceParcouru+=1
         return e
 
     def getClosestEnemy(self, g: Grille) -> tuple:
