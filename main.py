@@ -3,9 +3,11 @@ import pygame
 import sys
 from grille.grille import Grille
 from gameMaster.gameMaster import GameMaster
+from Menu.menu import Menu
 
 def main():
     pygame.init()
+
 
     game_width, game_height = 600, 600  # Zone de jeu carrée
     sidebar_width = 200  # zone des infos
@@ -14,10 +16,15 @@ def main():
 
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("PixelWar")
-
-    grille = Grille(10, 10, game_width, game_height, screen)
+    acceuil=Menu(screen)
+    acceuil.run_menu()
+    nbTeam=acceuil.num_team
+    nbAgetPerTeam=acceuil.num_agent
+    nbLigne=acceuil.grid_height
+    nbColone=acceuil.grid_width
+    grille = Grille(nbLigne, nbColone, game_width, game_height, screen)
     try:
-        master = GameMaster(2, 3, 10, 10, grille)
+        master = GameMaster(nbTeam, nbAgetPerTeam, nbLigne, nbColone, grille)
     except ValueError as e:
         print(f"Erreur lors de l'initialisation du jeu : {e}")
         return
