@@ -75,8 +75,9 @@ class Agent:
 
     def jouer(self, g: Grille):
         if self.comportement == "fou":
-            if self.moveRandom(g):
-                return (0, 0)
+            action=self.action_fou(g)
+            if action[0]:
+                return action[1] if action[1] != None else (0,0)
         elif self.comportement == "agressif":
             action=self.action_agressive(g)
             if action[0]:
@@ -88,6 +89,24 @@ class Agent:
 
         self.moveRandom(g)
         return (0, 0)
+
+    def action_fou(self,g:Grille):
+        enemy_pos = self.getClosestEnemy(g)
+        if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos):
+            if abs(self.x - enemy_pos[0]) == 2 or abs(self.y - enemy_pos[1]) == 2:
+                self.jump(g, enemy_pos)
+            self.nbAgentsMange+=1
+            return (True,enemy_pos)
+
+        obstacle = self.verifier_obstacle_adjacent(g)
+        if obstacle[0]:
+            x, y = obstacle[1]
+            self.casseObstacle(g, x, y)
+            self.AgroCasseObs+=1
+            return (True,None)
+
+        if self.moveRandom(g):
+            return (True,None)
 
     def action_agressive(self, g: Grille):
         enemy_pos = self.getClosestEnemy(g)
