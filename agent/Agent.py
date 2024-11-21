@@ -50,7 +50,7 @@ class Agent:
 
         self.comportement = random.choices(
             ["agressif", "defensif", "fou"],
-            weights=[0.4, 0.4, 0.2],
+            weights=[0.5, 0.5, 0.],
             k=1
         )[0]
 
@@ -129,8 +129,41 @@ class Agent:
         return (False,None)
 
 
+    def risque_etre_mange_apres_action(self,g: Grille, enemy_pos: tuple) -> bool:
+        dx = abs(self.x - enemy_pos[0])
+        dy = abs(self.y - enemy_pos[1])
+        if dx == 2 and dy == 0:
+            new_x = int((self.x + enemy_pos[0]) / 2)
+            new_y = self.y
+        elif dy == 2 and dx == 0:
+            new_x = self.x
+            new_y = int((self.y + enemy_pos[1]) / 2)
+        else:
+            new_x = self.x
+            new_y = self.y
+        for i in range(g.n):
+            for j in range(g.m):
+                if g.grid[i][j] > 0 and g.grid[i][j] != self.numEquipe and (j,i) != enemy_pos:
+                    distance = abs(new_x - j) + abs(new_y - i)
+                    if distance <= 2:
+                        return True
+
+        return False
+
+
+
+
     def action_defensive(self, g: Grille):
+
         enemy_pos = self.getClosestEnemy(g)
+
+        if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos) and not self.risque_etre_mange_apres_action(g,enemy_pos):
+            if abs(self.x - enemy_pos[0]) == 2 or abs(self.y - enemy_pos[1]) == 2:
+                self.jump(g, enemy_pos)
+            self.defAMange+=1
+            self.nbAgentsMange+=1
+            return (True,enemy_pos)
+
         if enemy_pos != (0, 0) and self.vaSeFaireManger(self.x, self.y, enemy_pos):
             if self.moveRandom(g):
                 self.defAFui+=1
@@ -142,15 +175,7 @@ class Agent:
             self.casseObstacle(g, x, y)
             return (True,None)
 
-        enemy_pos = self.getClosestEnemy(g)
-        if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos):
-            if abs(self.x - enemy_pos[0]) == 2 or abs(self.y - enemy_pos[1]) == 2:
-                self.jump(g, enemy_pos)
-            self.defAMange+=1
-            self.nbAgentsMange+=1
-            return (True,enemy_pos)
-
-        if self.moveRandom(g):
+        if self.moveClosest(g):
             return (True,None)
 
         return (False,None)
