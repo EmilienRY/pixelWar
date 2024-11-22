@@ -108,6 +108,9 @@ class Agent:
         if self.moveRandom(g):
             return (True,None)
 
+        return (False,None)
+
+
     def action_agressive(self, g: Grille):
         enemy_pos = self.getClosestEnemy(g)
         if enemy_pos != (0, 0) and self.peut_manger(g, enemy_pos):
