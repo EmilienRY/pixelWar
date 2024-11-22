@@ -36,35 +36,32 @@ class Menu:
         while True:
             self.screen.fill((255, 255, 255))
             # Draw grid width and height
-            self.draw_text(f'Grid Size: {self.grid_width} {self.grid_height}', 20, 20, Color.BLACK.value)
+            self.draw_text(f'Taille de la grille: {self.grid_width} {self.grid_height}', 20, 20, Color.BLACK.value)
             self.draw_arrow(400, 30, 'left')
             self.draw_arrow(440, 30, 'right')
 
-            self.draw_text(f'Number of Team: {self.num_team}', 20, 60, Color.BLACK.value)
+            self.draw_text(f"Nombre d'équipe: {self.num_team}", 20, 60, Color.BLACK.value)
             self.draw_arrow(400, 70, 'left')
             self.draw_arrow(440, 70, 'right')
 
-            self.draw_text(f'Color of Team 1: {self.color[self.i].name}', 20, 100, self.color[self.i].value)
+            self.draw_text(f"Couleur de l'équipe 1: {self.color[self.i].name}", 20, 100, self.color[self.i].value)
             self.draw_arrow(400, 110, 'left')
             self.draw_arrow(440, 110, 'right')
 
-            self.draw_text(f'Color of Team 2: {self.color[self.j].name}', 20, 140, self.color[self.j].value)
+            self.draw_text(f"Couleur de l'équipe 2: {self.color[self.j].name}", 20, 140, self.color[self.j].value)
             self.draw_arrow(400, 150, 'left')
             self.draw_arrow(440, 150, 'right')
 
-            if self.num_team==3:
-                self.draw_text(f'Color of Team 3: {self.color[self.k].name}', 20, 180, self.color[self.k].value)
+            if self.num_team>2:
+                self.draw_text(f"Couleur de l'équipe 3: {self.color[self.k].name}", 20, 180, self.color[self.k].value)
                 self.draw_arrow(400, 190, 'left')
                 self.draw_arrow(440, 190, 'right')
-            elif self.num_team==4:
-                self.draw_text(f'Color of Team 3: {self.color[self.k].name}', 20, 180, self.color[self.k].value)
-                self.draw_arrow(400, 190, 'left')
-                self.draw_arrow(440, 190, 'right')
-                self.draw_text(f'Color of Team 4: {self.color[self.l].name}', 20, 220, self.color[self.l].value)
-                self.draw_arrow(400, 230, 'left')
-                self.draw_arrow(440, 230, 'right')
+                if self.num_team==4:
+                    self.draw_text(f"Couleur de l'équipe 4: {self.color[self.l].name}", 20, 220, self.color[self.l].value)
+                    self.draw_arrow(400, 230, 'left')
+                    self.draw_arrow(440, 230, 'right')
 
-            self.draw_text(f'Number of Agent per Team: {self.num_agent}', 20, 260, Color.BLACK.value)
+            self.draw_text(f"Nombre d'agent par équipe: {self.num_agent}", 20, 260, Color.BLACK.value)
             self.draw_arrow(400, 270, 'left')
             self.draw_arrow(440, 270, 'right')
 
@@ -76,9 +73,9 @@ class Menu:
             self.draw_arrow(400, 350, 'left')
             self.draw_arrow(440, 350, 'right')
 
-            self.draw_text('Press Enter to Start', 20, 380, Color.BLACK.value)
+            self.draw_text('Appuyer sur Entrée pour Lancer', 20, 380, Color.BLACK.value)
 
-            self.draw_text("Caution Two Different Team Can't Have The Same Color", 20, 420, Color.RED.value)
+            self.draw_text("Attention deux différentes équipe ne peuvent pas avoir la même couleur", 20, 420, Color.RED.value)
             self.alert=False
 
             for event in pygame.event.get():
