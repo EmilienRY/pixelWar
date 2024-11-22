@@ -53,13 +53,9 @@ class Agent:
 
         self.comportement = random.choices(
             ["agressif", "defensif", "fou", "support"],
-            weights=[0.2, 0.0, 0.1, 0.7],
+            weights=[0.3, 0.3, 0.1, 0.3],
             k=1
         )[0]
-
-
-
-
 
     def vaSeFaireManger(self, new_x,new_y,enemy_pos):
 
@@ -153,6 +149,7 @@ class Agent:
     def action_support(self, g: Grille):
         enemy_of_friend_pos = self.friend.getClosestEnemy(g)
         if enemy_of_friend_pos != (0, 0) and self.peut_manger(g, enemy_of_friend_pos):
+            print("je peux bouf ennemi allié")
             if abs(self.x - enemy_of_friend_pos[0]) == 2 or abs(self.y - enemy_of_friend_pos[1]) == 2:
                 self.jump(g, enemy_of_friend_pos)
             self.nbAgentsMange += 1
@@ -197,9 +194,9 @@ class Agent:
 
     def moveFriend(self, g: Grille) -> bool:
         closestEnemy = self.friend.getClosestEnemy(g)
-        if closestEnemy != (0, 0): return False
+        if closestEnemy == (0, 0): return False
         distance = abs(closestEnemy[0] - self.friend.x) + abs(closestEnemy[1] - self.friend.y)
-        target = closestEnemy if distance < 6 else self.friend
+        target = closestEnemy if distance < 6 else (self.friend.x,self.friend.y)
         nextMove = prochaine_case((self.x, self.y), target)
         if not self.vaSeFaireManger(nextMove[0], nextMove[1], closestEnemy):
             if self.avancer(g, nextMove[0], nextMove[1]):

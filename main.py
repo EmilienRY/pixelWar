@@ -100,7 +100,11 @@ def main():
 
 
             stats_team_textTyp = policeInfo.render(
-                f"Équipe {team.numEquipe} - agressifs: {team.nbAgro}, défensifs: {team.nbDef},fous: {team.nbFou} ",
+                f"Équipe {team.numEquipe} - agressifs: {team.nbAgro}, défensifs: {team.nbDef}",
+                True, (0, 0, 0)
+            )
+            stats_team_textTyp2 = policeInfo.render(
+                f"Équipe {team.numEquipe} -fous: {team.nbFou}, support: {team.nbSupport} ",
                 True, (0, 0, 0)
             )
 
@@ -142,6 +146,8 @@ def main():
             x_colonne1 = game_width + 10
             x_colonne2 = game_width + 400
             screen.blit(stats_team_textTyp, (x_colonne1, y_offset))
+            y_offset += 25
+            screen.blit(stats_team_textTyp2, (x_colonne1, y_offset))
             y_offset += 25
             screen.blit(statsObsDetr, (x_colonne1, y_offset))
             y_offset += 25

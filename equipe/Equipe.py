@@ -46,3 +46,5 @@ class Equipe:
                 self.nbFou+=1
             elif a.comportement =="support":
                 self.nbSupport+=1
+            elif a.comportement =="support":
+                self.nbSupport+=1
