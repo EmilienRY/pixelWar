@@ -164,8 +164,6 @@ class Agent:
         return False
 
 
-
-
     def action_defensive(self, g: Grille):
 
         enemy_pos = self.getClosestEnemy(g)
@@ -188,7 +186,7 @@ class Agent:
             self.casseObstacle(g, x, y)
             return (True,None)
 
-        alea=random.choices([True,False],weights=[0.5, 0.5],k=1)[0]
+        alea=random.choices([True,False],weights=[0.2, 0.8],k=1)[0]
         if alea:
             if self.moveRandom(g):
                 return (True,None)
