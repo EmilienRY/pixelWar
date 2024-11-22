@@ -1,3 +1,4 @@
+from random import randint
 from grille.grille import Grille
 import random
 import math
@@ -38,6 +39,8 @@ class Agent:
         self.x = x
         self.y = y
         self.max_tentatives = 10
+        self.friend = None
+        self.equipiers=[]
 
         self.cptOstaclesdetruit=0
         self.mouvAleatoir=0
@@ -49,14 +52,10 @@ class Agent:
         self.defAFui=0
 
         self.comportement = random.choices(
-            ["agressif", "defensif", "fou"],
-            weights=[0.4, 0.4, 0.2],
+            ["agressif", "defensif", "fou", "support"],
+            weights=[0.3, 0.3, 0.1, 0.3],
             k=1
         )[0]
-
-
-
-
 
     def vaSeFaireManger(self, new_x,new_y,enemy_pos):
 
@@ -81,11 +80,22 @@ class Agent:
         elif self.comportement == "agressif":
             action=self.action_agressive(g)
             if action[0]:
-                return action[1] if action[1] != None else (0,0)
+                return action[1] if action[1] is not None else (0, 0)
         elif self.comportement == "defensif":
             action=self.action_defensive(g)
             if action[0]:
-                return action[1] if action[1] != None else (0,0)
+                return action[1] if action[1] is not None else (0, 0)
+        elif self.comportement == "support":
+            if self.friend is not None:
+                action=self.action_support(g)
+                if action[0]:
+                    return action[1] if action[1] is not None else (0, 0)
+            else:
+                if len(self.equipiers)<=1:
+                    self.friend = self.equipiers[0]
+                else:
+                    coupain=randint(0,len(self.equipiers)-1)
+                    self.friend=self.equipiers[coupain]
 
         self.moveRandom(g)
         return (0, 0)
@@ -190,6 +200,27 @@ class Agent:
 
         return (False,None)
 
+    def action_support(self, g: Grille):
+        enemy_of_friend_pos = self.friend.getClosestEnemy(g)
+        if enemy_of_friend_pos != (0, 0) and self.peut_manger(g, enemy_of_friend_pos):
+            print("je peux bouf ennemi allié")
+            if abs(self.x - enemy_of_friend_pos[0]) == 2 or abs(self.y - enemy_of_friend_pos[1]) == 2:
+                self.jump(g, enemy_of_friend_pos)
+            self.nbAgentsMange += 1
+            return True, enemy_of_friend_pos
+
+        if self.moveFriend(g):
+            return True, None
+
+        obstacle = self.verifier_obstacle_adjacent(g)
+        if obstacle[0]:
+            x, y = obstacle[1]
+            self.casseObstacle(g, x, y)
+            self.AgroCasseObs += 1
+            return True, None
+
+        return False, None
+
     def moveRandom(self, g: Grille) -> bool:
         self.mouvAleatoir += 1
         for _ in range(self.max_tentatives):
@@ -204,9 +235,8 @@ class Agent:
                 return True
         return False
 
-
     def moveClosest(self, g: Grille) -> bool:
-        self.mouvPasAleatoir+=1
+        self.mouvPasAleatoir += 1
         closestEnemy = self.getClosestEnemy(g)
         if closestEnemy != (0, 0):
             nextMove = prochaine_case((self.x, self.y), closestEnemy)
@@ -214,6 +244,17 @@ class Agent:
                 if self.avancer(g, nextMove[0], nextMove[1]):
                     return True
 
+        return False
+
+    def moveFriend(self, g: Grille) -> bool:
+        closestEnemy = self.friend.getClosestEnemy(g)
+        if closestEnemy == (0, 0): return False
+        distance = abs(closestEnemy[0] - self.friend.x) + abs(closestEnemy[1] - self.friend.y)
+        target = closestEnemy if distance < 6 else (self.friend.x,self.friend.y)
+        nextMove = prochaine_case((self.x, self.y), target)
+        if not self.vaSeFaireManger(nextMove[0], nextMove[1], closestEnemy):
+            if self.avancer(g, nextMove[0], nextMove[1]):
+                return True
         return False
 
 
@@ -287,3 +328,9 @@ class Agent:
         self.cptOstaclesdetruit+=1
         if 0 <= x < g.m and 0 <= y < g.n and g.grid[y][x] == -1:
             g.remove_obstacle(x, y)
+
+    def addEquipier(self,listeEquipier):
+        for i in range(len(listeEquipier)):
+            if listeEquipier[i].numPlayer!=self.numPlayer:
+                self.equipiers.append(listeEquipier[i])
+
