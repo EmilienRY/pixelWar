@@ -9,7 +9,7 @@ def main():
     pygame.init()
 
 
-    game_width, game_height = 900, 900
+    game_width, game_height = 1000, 1000
     sidebar_width = 800  # zone des infos
     screen_width = game_width + sidebar_width
     screen_height = game_height
@@ -62,7 +62,8 @@ def main():
         screen.blit(teams_title, (game_width + 10, y_offset))
 
         y_offset += 40
-        for team in etatJeu['statu equipe']:
+        sorted_teams=sorted(etatJeu['statu equipe'], key=lambda x: x['num equipe'])
+        for team in sorted_teams:
             team_color = colorTeams[team['num equipe'] - 1]
             pygame.draw.rect(screen, team_color.value,
                              (game_width + 10, y_offset, 20, 20))
@@ -84,7 +85,6 @@ def main():
 
         y_offset += 60
 
-        sorted_teams = sorted(etatJeu['statu equipe'], key=lambda x: x['num equipe'])
 
         for team_info in sorted_teams:
             team = team_info['team']
