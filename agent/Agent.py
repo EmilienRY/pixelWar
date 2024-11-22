@@ -50,7 +50,7 @@ class Agent:
 
         self.comportement = random.choices(
             ["agressif", "defensif", "fou"],
-            weights=[0.5, 0.5, 0.],
+            weights=[0.4, 0.4, 0.2],
             k=1
         )[0]
 
@@ -175,8 +175,15 @@ class Agent:
             self.casseObstacle(g, x, y)
             return (True,None)
 
-        if self.moveClosest(g):
-            return (True,None)
+        alea=random.choices([True,False],weights=[0.5, 0.5],k=1)[0]
+        if alea:
+            if self.moveRandom(g):
+                return (True,None)
+        else:
+            if self.moveClosest(g):
+                return (True,None)
+
+
 
         return (False,None)
 
