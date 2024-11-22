@@ -1,3 +1,4 @@
+from random import randint
 from grille.grille import Grille
 import random
 import math
@@ -39,6 +40,7 @@ class Agent:
         self.y = y
         self.max_tentatives = 10
         self.friend = None
+        self.equipiers=[]
 
         self.cptOstaclesdetruit=0
         self.mouvAleatoir=0
@@ -51,7 +53,7 @@ class Agent:
 
         self.comportement = random.choices(
             ["agressif", "defensif", "fou", "support"],
-            weights=[0.4, 0.0, 0.1, 0.5],
+            weights=[0.2, 0.0, 0.1, 0.7],
             k=1
         )[0]
 
@@ -91,6 +93,12 @@ class Agent:
                 action=self.action_support(g)
                 if action[0]:
                     return action[1] if action[1] is not None else (0, 0)
+            else:
+                if len(self.equipiers)<=1:
+                    self.friend = self.equipiers[0]
+                else:
+                    coupain=randint(0,len(self.equipiers)-1)
+                    self.friend=self.equipiers[coupain]
 
         self.moveRandom(g)
         return (0, 0)
@@ -269,3 +277,9 @@ class Agent:
         self.cptOstaclesdetruit+=1
         if 0 <= x < g.m and 0 <= y < g.n and g.grid[y][x] == -1:
             g.remove_obstacle(x, y)
+
+    def addEquipier(self,listeEquipier):
+        for i in range(len(listeEquipier)):
+            if listeEquipier[i].numPlayer!=self.numPlayer:
+                self.equipiers.append(listeEquipier[i])
+

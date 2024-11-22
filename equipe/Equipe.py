@@ -15,6 +15,7 @@ class Equipe:
         self.nbAgro=0
         self.nbDef=0
         self.nbFou=0
+        self.nbSupport=0
 
         x=xStart
         y=yStart
@@ -30,6 +31,9 @@ class Equipe:
             listeEquipier.append(a)
 
         self.listeEquipier=listeEquipier
+        for i in range(len(listeEquipier)):
+            listeEquipier[i].addEquipier(listeEquipier)
+        print(listeEquipier)
         self.compterTyp()
 
     def compterTyp(self):
@@ -40,3 +44,5 @@ class Equipe:
                 self.nbDef+=1
             elif a.comportement == "fou":
                 self.nbFou+=1
+            elif a.comportement =="support":
+                self.nbSupport+=1

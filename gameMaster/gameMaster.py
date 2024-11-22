@@ -76,6 +76,8 @@ class GameMaster:
         for team in self.teams:
             team.listeEquipier = [agent for agent in team.listeEquipier
                                   if not (agent.x == x and agent.y == y)]
+        mort=self.grid.grid[y][x]
+
         self.grid.grid[y][x] = 0
 
     def etatDujeu(self) -> dict:
